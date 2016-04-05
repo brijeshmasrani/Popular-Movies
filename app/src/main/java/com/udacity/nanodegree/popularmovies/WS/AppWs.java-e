@@ -2,16 +2,15 @@ package com.udacity.nanodegree.popularmovies.ws;
 
 import android.content.Context;
 
+import com.squareup.okhttp.ResponseBody;
 import com.udacity.nanodegree.popularmovies.R;
-import com.udacity.nanodegree.popularmovies.ws.entity.BaseRequest;
-import com.udacity.nanodegree.popularmovies.ws.entity.BaseResponse;
-import com.udacity.nanodegree.popularmovies.ws.entity.PopularMovieResponse;
-import com.udacity.nanodegree.popularmovies.ws.entity.TopRatedMovieResponse;
-import com.udacity.nanodegree.popularmovies.ws.retrofit.RestClient;
 import com.udacity.nanodegree.popularmovies.utils.Logger;
 import com.udacity.nanodegree.popularmovies.utils.NetworkUtils;
+import com.udacity.nanodegree.popularmovies.ws.entity.BaseRequest;
+import com.udacity.nanodegree.popularmovies.ws.entity.BaseResponse;
+import com.udacity.nanodegree.popularmovies.ws.entity.MovieResponse;
+import com.udacity.nanodegree.popularmovies.ws.retrofit.RestClient;
 
-import com.squareup.okhttp.ResponseBody;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -23,36 +22,34 @@ public class AppWs {
 
     public static void getTopRatedMovies(final Context context, final WsListener listener) {
 
-        Call<TopRatedMovieResponse> call = RestClient.get().getTopRatedMovies(context.getString(R.string.text_API_KEY));
+        Call<MovieResponse> call = RestClient.get().getTopRatedMovies(context.getString(R.string.text_API_KEY));
 
         try {
 
-            call.enqueue(new Callback<TopRatedMovieResponse>() {
+            call.enqueue(new Callback<MovieResponse>() {
 
                 @Override
-                public void onResponse(Response<TopRatedMovieResponse> response, Retrofit retrofit) {
-                    TopRatedMovieResponse baseResponse = response.body();
+                public void onResponse(Response<MovieResponse> response, Retrofit retrofit) {
+                    MovieResponse baseResponse = response.body();
 
-                    if (baseResponse != null
-                            && response.isSuccess()) {
+
+                    if (response.isSuccess()) {
 
                         if (listener != null) {
 
                             listener.onResponseSuccess(baseResponse);
                         }
 
-                    } else {
+                    } else if (listener != null) {
 
-                        if (listener != null) {
+                        ResponseBody errorBody = response.errorBody();
 
-                            ResponseBody errorBody = response.errorBody();
 
-                            if (errorBody != null) {
+                        if (errorBody != null) {
 
-                            }
-
-                            listener.notifyResponseFailed(null, null);
                         }
+
+                        listener.notifyResponseFailed(null, null);
                     }
                 }
 
@@ -74,18 +71,17 @@ public class AppWs {
 
     public static void getPopularMovies(final Context context, final WsListener listener) {
 
-        Call<PopularMovieResponse> call = RestClient.get().getPopularMovies(context.getString(R.string.text_API_KEY));
+        Call<MovieResponse> call = RestClient.get().getPopularMovies(context.getString(R.string.text_API_KEY));
 
         try {
 
-            call.enqueue(new Callback<PopularMovieResponse>() {
+            call.enqueue(new Callback<MovieResponse>() {
 
                 @Override
-                public void onResponse(Response<PopularMovieResponse> response, Retrofit retrofit) {
-                    PopularMovieResponse baseResponse = response.body();
+                public void onResponse(Response<MovieResponse> response, Retrofit retrofit) {
+                    MovieResponse baseResponse = response.body();
 
-                    if (baseResponse != null
-                            && response.isSuccess()) {
+                    if (response.isSuccess()) {
 
                         if (listener != null) {
 

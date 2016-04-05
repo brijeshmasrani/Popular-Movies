@@ -1,34 +1,46 @@
 package com.udacity.nanodegree.popularmovies.activity;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.udacity.nanodegree.popularmovies.R;
+import com.udacity.nanodegree.popularmovies.adapter.HomeMovieAdapter;
+import com.udacity.nanodegree.popularmovies.utils.Logger;
 import com.udacity.nanodegree.popularmovies.ws.AppWs;
 import com.udacity.nanodegree.popularmovies.ws.entity.BaseRequest;
 import com.udacity.nanodegree.popularmovies.ws.entity.BaseResponse;
-import com.udacity.nanodegree.popularmovies.ws.entity.PopularMovieResponse;
-import com.udacity.nanodegree.popularmovies.ws.entity.TopRatedMovieResponse;
-import com.udacity.nanodegree.popularmovies.utils.Logger;
+import com.udacity.nanodegree.popularmovies.ws.entity.MovieResponse;
 
 public class HomeActivity extends AppCompatActivity {
     Context mContext;
+    RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        recyclerView = (RecyclerView) findViewById(R.id.movieList);
         mContext = HomeActivity.this;
 
         AppWs.getPopularMovies(mContext, new AppWs.WsListener() {
             @Override
             public void onResponseSuccess(BaseResponse baseResponse) {
-                if(baseResponse instanceof PopularMovieResponse){
-                    PopularMovieResponse movieResponse = (PopularMovieResponse) baseResponse;
-
+                if(baseResponse instanceof MovieResponse){
+                    MovieResponse movieResponse = (MovieResponse) baseResponse;
                     Logger.e("PopularMovieResponse pages ",""+ movieResponse.getTotalPages());
 
+                    HomeMovieAdapter movieAdapter = new HomeMovieAdapter(movieResponse,HomeActivity.this);
+                    GridLayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(),2,
+                            GridLayoutManager.VERTICAL,false);
+                    recyclerView.setLayoutManager(mLayoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(movieAdapter);
                 }
             }
 
@@ -38,13 +50,13 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        AppWs.getTopRatedMovies(mContext, new AppWs.WsListener() {
+        /*AppWs.getTopRatedMovies(mContext, new AppWs.WsListener() {
             @Override
             public void onResponseSuccess(BaseResponse baseResponse) {
-                if(baseResponse instanceof TopRatedMovieResponse){
-                    TopRatedMovieResponse movieResponse = (TopRatedMovieResponse) baseResponse;
+                if(baseResponse instanceof MovieResponse){
+                    MovieResponse movieResponse = (MovieResponse) baseResponse;
 
-                    Logger.e("TopRatedMovieResponse pages ",""+ movieResponse.getTotalPages());
+                    Logger.e("MovieResponseBean pages ",""+ movieResponse.getTotalPages());
 
                 }
             }
@@ -53,6 +65,6 @@ public class HomeActivity extends AppCompatActivity {
             public void notifyResponseFailed(String message, BaseRequest request) {
 
             }
-        });
+        });*/
     }
 }

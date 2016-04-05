@@ -1,7 +1,8 @@
 package com.udacity.nanodegree.popularmovies.ws.retrofit;
 
-import com.udacity.nanodegree.popularmovies.ws.entity.PopularMovieResponse;
-import com.udacity.nanodegree.popularmovies.ws.entity.TopRatedMovieResponse;
+import com.udacity.nanodegree.popularmovies.ws.entity.MovieResponse;
+
+import java.util.ArrayList;
 
 import retrofit.Call;
 import retrofit.http.GET;
@@ -12,9 +13,9 @@ import retrofit.http.Query;
 public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @GET("popular")
-    Call<PopularMovieResponse> getPopularMovies(@Query("api_key") String key);
+    Call<MovieResponse> getPopularMovies(@Query("api_key") String key);
 
     @Headers("Content-Type: application/json")
     @GET("top_rated")
-    Call<TopRatedMovieResponse> getTopRatedMovies(@Query("api_key") String key);
+    Call<MovieResponse> getTopRatedMovies(@Query("api_key") String key);
 }
