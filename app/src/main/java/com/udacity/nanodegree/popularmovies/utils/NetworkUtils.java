@@ -10,40 +10,23 @@ import com.udacity.nanodegree.popularmovies.R;
 public class NetworkUtils {
 
     public static boolean isOnline(Context context) {
-
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
-        if (netInfo != null
+        return netInfo != null
                 && netInfo.isConnectedOrConnecting()
                 && cm.getActiveNetworkInfo().isAvailable()
-                && cm.getActiveNetworkInfo().isConnected()) {
-
-            return true;
-        }
-
-        return false;
+                && cm.getActiveNetworkInfo().isConnected();
     }
 
     public static boolean checkInternetConnection(Context context) {
-
-        if(!NetworkUtils.isOnline(context)) {
-
-            if(context instanceof Activity) {
-
+        if (!NetworkUtils.isOnline(context)) {
+            if (context instanceof Activity) {
                 String message = context.getString(R.string.internet_off);
-                Notify.dialogOK(message, (Activity)context, false);
-
-            } else {
-
-                //Notify.toast(message, context);
+                Notify.dialogOK(message, (Activity) context, false);
             }
-
             return false;
         }
-
         return true;
     }
-
 }

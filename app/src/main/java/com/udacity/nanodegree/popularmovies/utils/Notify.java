@@ -9,9 +9,6 @@ import android.widget.Toast;
 
 import com.udacity.nanodegree.popularmovies.R;
 
-/**
- * Created by brijesh on 3/28/16.
- */
 public class Notify {
 
     public static void dialogOK(String message, final Activity activity, final boolean finish) {

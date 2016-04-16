@@ -43,12 +43,8 @@ public class AppWs {
                     } else if (listener != null) {
 
                         ResponseBody errorBody = response.errorBody();
-
-
                         if (errorBody != null) {
-
                         }
-
                         listener.notifyResponseFailed(null, null);
                     }
                 }
@@ -91,13 +87,9 @@ public class AppWs {
                     } else {
 
                         if (listener != null) {
-
                             ResponseBody errorBody = response.errorBody();
-
                             if (errorBody != null) {
-
                             }
-
                             listener.notifyResponseFailed(null, null);
                         }
                     }

@@ -1,7 +1,18 @@
 <resources>
     <string name="app_name">Popular Movies</string>
-    <string name="text_API_KEY">Put your key <here></here></string>
-    <string name="text_ok">Ok</string>
+    <string name="text_API_KEY">051aa3a306c82edd1280fcf5395255b4</string>
+    <string name="text_ok">OK</string>
     <string name="internet_off">Please check internet connection.</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="transition_string">hello</string>
+    <string name="test_description">Under the direction of a ruthless instructor, a talented young drummer begins to pursue perfection at any cost, even his humanity.</string>
+    <string name="test_movieName">Chappie</string>
+    <string name="text_label_description">Description</string>
+    <string name="text_label_rating">Rating</string>
+    <string name="text_label_duration">Duration</string>
+    <string name="text_label_year_of_release">Year Of Release</string>
+    <string name="tag_selected">selected</string>
+    <string name="tag_notselected">notselected</string>
+    <string name="rating_outof10">/10</string>
 
 </resources>

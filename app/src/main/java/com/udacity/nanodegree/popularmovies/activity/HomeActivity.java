@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.udacity.nanodegree.popularmovies.R;
@@ -36,7 +35,8 @@ public class HomeActivity extends AppCompatActivity {
                     Logger.e("PopularMovieResponse pages ",""+ movieResponse.getTotalPages());
 
                     HomeMovieAdapter movieAdapter = new HomeMovieAdapter(movieResponse,HomeActivity.this);
-                    GridLayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(),2,
+                    float dimension = getResources().getInteger(R.integer.column_count);
+                    GridLayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), (int) dimension,
                             GridLayoutManager.VERTICAL,false);
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
