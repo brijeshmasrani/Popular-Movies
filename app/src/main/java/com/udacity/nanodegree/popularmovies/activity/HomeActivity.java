@@ -1,15 +1,18 @@
 package com.udacity.nanodegree.popularmovies.activity;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.udacity.nanodegree.popularmovies.R;
 import com.udacity.nanodegree.popularmovies.adapter.HomeMovieAdapter;
@@ -23,17 +26,33 @@ import com.udacity.nanodegree.popularmovies.ws.entity.BaseResponse;
 import com.udacity.nanodegree.popularmovies.ws.entity.MovieResponse;
 
 public class HomeActivity extends AppCompatActivity {
-    Context mContext;
-    RecyclerView recyclerView;
+    private Context mContext;
+    private RecyclerView recyclerView;
+    private ImageView tick_popular, tick_topRated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setupView();
+    }
+
+    void setupView() {
         setContentView(R.layout.activity_home);
 
         recyclerView = (RecyclerView) findViewById(R.id.movieList);
+        float dimension = getResources().getInteger(R.integer.column_count);
+        GridLayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), (int) dimension,
+                GridLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(mLayoutManager);
+        mLayoutManager.setAutoMeasureEnabled(true);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
         mContext = HomeActivity.this;
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        setTitle("");
         String sortOrder = AppPreferences.getString(AppPreferences.HOME_SORT_PREFERENCE, SORT_ORDER.POPULAR.name());
 
         if (sortOrder.equalsIgnoreCase(SORT_ORDER.POPULAR.name())) {
@@ -52,29 +71,59 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
             case R.id.menu_sort:
-                final CharSequence[] items = {SORT_ORDER.TOP_RATED.name(), SORT_ORDER.POPULAR.name()};
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Make your selection");
-                builder.setItems(items, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        // Do something with the selection
-                        String selectedItem = (String) items[item];
-                        if (selectedItem.equalsIgnoreCase(SORT_ORDER.POPULAR.name())) {
-                            showPopularMovies();
-                        } else if (selectedItem.equalsIgnoreCase(SORT_ORDER.TOP_RATED.name())) {
-                            showTopRatedMovies();
-                        }
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
-                return true;
+                builder.setView(R.layout.sort_dialog);
 
+                final AlertDialog alert = builder.create();
+                alert.show();
+
+                tick_popular = (ImageView) alert.findViewById(R.id.img_popular_tick);
+                tick_topRated = (ImageView) alert.findViewById(R.id.img_toprated_tick);
+
+                String sortOrder = AppPreferences.getString(AppPreferences.HOME_SORT_PREFERENCE, SORT_ORDER.POPULAR.name());
+                setTickVisibility(sortOrder);
+
+                RelativeLayout relativeLayoutPopular = (RelativeLayout) alert.findViewById(R.id.rl_popular);
+                RelativeLayout relativeLayoutTopRated = (RelativeLayout) alert.findViewById(R.id.rl_toprated);
+
+                if (relativeLayoutPopular != null) {
+                    relativeLayoutPopular.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setTickVisibility(SORT_ORDER.POPULAR.name());
+                            showPopularMovies();
+                            alert.dismiss();
+                        }
+                    });
+                }
+
+                if (relativeLayoutTopRated != null) {
+                    relativeLayoutTopRated.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setTickVisibility(SORT_ORDER.TOP_RATED.name());
+                            showTopRatedMovies();
+                            alert.dismiss();
+                        }
+                    });
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
 
+    void setTickVisibility(String sortOrder) {
+
+        if (sortOrder.equalsIgnoreCase(SORT_ORDER.POPULAR.name())) {
+            tick_popular.setVisibility(View.VISIBLE);
+            tick_topRated.setVisibility(View.INVISIBLE);
+        } else if (sortOrder.equalsIgnoreCase(SORT_ORDER.TOP_RATED.name())) {
+            tick_popular.setVisibility(View.INVISIBLE);
+            tick_topRated.setVisibility(View.VISIBLE);
         }
     }
 
@@ -84,8 +133,8 @@ public class HomeActivity extends AppCompatActivity {
             public void onResponseSuccess(BaseResponse baseResponse) {
                 if (baseResponse instanceof MovieResponse) {
                     MovieResponse movieResponse = (MovieResponse) baseResponse;
-                    Logger.e("PopularMovieResponse pages ", "" + movieResponse.getTotalPages());
                     setupAdapter(movieResponse);
+                    AppPreferences.putString(AppPreferences.HOME_SORT_PREFERENCE, SORT_ORDER.POPULAR.name());
                 }
             }
 
@@ -102,8 +151,8 @@ public class HomeActivity extends AppCompatActivity {
             public void onResponseSuccess(BaseResponse baseResponse) {
                 if (baseResponse instanceof MovieResponse) {
                     MovieResponse movieResponse = (MovieResponse) baseResponse;
-                    Logger.e("getTopRatedMovies pages ", "" + movieResponse.getTotalPages());
                     setupAdapter(movieResponse);
+                    AppPreferences.putString(AppPreferences.HOME_SORT_PREFERENCE, SORT_ORDER.TOP_RATED.name());
                 }
             }
 
@@ -114,14 +163,24 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-
     void setupAdapter(MovieResponse movieResponse) {
+        Logger.d("setupAdapter", "setupAdapter");
         HomeMovieAdapter movieAdapter = new HomeMovieAdapter(movieResponse, HomeActivity.this);
-        float dimension = getResources().getInteger(R.integer.column_count);
-        GridLayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), (int) dimension,
-                GridLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(movieAdapter);
     }
+
+   /* @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        startActivity(new Intent(this,this.getClass()));
+        finish();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        startActivity(new Intent(this,this.getClass()));
+        finish();
+    }*/
 }

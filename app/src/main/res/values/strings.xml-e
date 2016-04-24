@@ -17,5 +17,10 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="text_tryagain">Please Try Again !!</string>
     <string name="sort">Sort</string>
+    <string name="text_select_category">Select the category</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="text_searching_popular">Searching Popular Movies !!</string>
+    <string name="text_searching_toprated">Searching Top Rated Movies !!</string>
 
 </resources>
