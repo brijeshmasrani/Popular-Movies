@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="colorPrimary">#c75c5c</color>
-    <color name="colorPrimaryDark">#B35252</color>
-    <color name="colorAccent">#c75c5c</color>
-    <color name="color_banner1">#162141</color>
-    <color name="color_textlabel">#939393</color>
-    <color name="color_banner">#c75c5c</color>
-</resources>
