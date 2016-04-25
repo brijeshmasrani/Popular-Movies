@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/big"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/largest">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingBottom="@dimen/bigger"
+        android:paddingTop="@dimen/small"
+        android:text="@string/text_select_category"
+        android:textSize="@dimen/text_large"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/rl_popular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/img_popular"
+                android:layout_width="@dimen/sort_icon_size"
+                android:layout_height="@dimen/sort_icon_size"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/small"
+                android:src="@drawable/ic_popular" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img_popular"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/small"
+                android:text="@string/popular"
+                android:textSize="@dimen/text_biggest"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/img_popular_tick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="@dimen/smaller"
+                android:layout_toRightOf="@id/img_popular"
+                android:padding="@dimen/smallest"
+                android:src="@drawable/ic_tick"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="@dimen/extrasmall"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary" />
+
+        <RelativeLayout
+            android:id="@+id/rl_toprated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/img_toprated"
+                android:layout_width="@dimen/sort_icon_size"
+                android:layout_height="@dimen/sort_icon_size"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/small"
+                android:src="@drawable/ic_top_rated" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img_toprated"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/small"
+                android:text="@string/top_rated"
+                android:textSize="@dimen/text_biggest"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/img_toprated_tick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="@dimen/smaller"
+                android:layout_toRightOf="@id/img_toprated"
+                android:padding="@dimen/smallest"
+                android:src="@drawable/ic_tick"
+                android:visibility="invisible" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>
