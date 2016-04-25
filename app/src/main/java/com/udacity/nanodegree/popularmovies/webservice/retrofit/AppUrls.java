@@ -1,4 +1,4 @@
-package com.udacity.nanodegree.popularmovies.ws.retrofit;
+package com.udacity.nanodegree.popularmovies.webservice.retrofit;
 
 public class AppUrls {
 

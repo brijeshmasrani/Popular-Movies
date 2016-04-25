@@ -20,10 +20,10 @@ import com.udacity.nanodegree.popularmovies.utils.AppConstants.SORT_ORDER;
 import com.udacity.nanodegree.popularmovies.utils.AppPreferences;
 import com.udacity.nanodegree.popularmovies.utils.Logger;
 import com.udacity.nanodegree.popularmovies.utils.Notify;
-import com.udacity.nanodegree.popularmovies.ws.AppWs;
-import com.udacity.nanodegree.popularmovies.ws.entity.BaseRequest;
-import com.udacity.nanodegree.popularmovies.ws.entity.BaseResponse;
-import com.udacity.nanodegree.popularmovies.ws.entity.MovieResponse;
+import com.udacity.nanodegree.popularmovies.webservice.AppWs;
+import com.udacity.nanodegree.popularmovies.webservice.entity.BaseRequest;
+import com.udacity.nanodegree.popularmovies.webservice.entity.BaseResponse;
+import com.udacity.nanodegree.popularmovies.webservice.entity.MoviesResponse;
 
 public class HomeActivity extends AppCompatActivity {
     private Context mContext;
@@ -131,9 +131,9 @@ public class HomeActivity extends AppCompatActivity {
         AppWs.getPopularMovies(mContext, new AppWs.WsListener() {
             @Override
             public void onResponseSuccess(BaseResponse baseResponse) {
-                if (baseResponse instanceof MovieResponse) {
-                    MovieResponse movieResponse = (MovieResponse) baseResponse;
-                    setupAdapter(movieResponse);
+                if (baseResponse instanceof MoviesResponse) {
+                    MoviesResponse moviesResponse = (MoviesResponse) baseResponse;
+                    setupAdapter(moviesResponse);
                     AppPreferences.putString(AppPreferences.HOME_SORT_PREFERENCE, SORT_ORDER.POPULAR.name());
                 }
             }
@@ -149,9 +149,9 @@ public class HomeActivity extends AppCompatActivity {
         AppWs.getTopRatedMovies(mContext, new AppWs.WsListener() {
             @Override
             public void onResponseSuccess(BaseResponse baseResponse) {
-                if (baseResponse instanceof MovieResponse) {
-                    MovieResponse movieResponse = (MovieResponse) baseResponse;
-                    setupAdapter(movieResponse);
+                if (baseResponse instanceof MoviesResponse) {
+                    MoviesResponse moviesResponse = (MoviesResponse) baseResponse;
+                    setupAdapter(moviesResponse);
                     AppPreferences.putString(AppPreferences.HOME_SORT_PREFERENCE, SORT_ORDER.TOP_RATED.name());
                 }
             }
@@ -163,9 +163,9 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    void setupAdapter(MovieResponse movieResponse) {
+    void setupAdapter(MoviesResponse moviesResponse) {
         Logger.d("setupAdapter", "setupAdapter");
-        HomeMovieAdapter movieAdapter = new HomeMovieAdapter(movieResponse, HomeActivity.this);
+        HomeMovieAdapter movieAdapter = new HomeMovieAdapter(moviesResponse, HomeActivity.this);
         recyclerView.setAdapter(movieAdapter);
     }
 

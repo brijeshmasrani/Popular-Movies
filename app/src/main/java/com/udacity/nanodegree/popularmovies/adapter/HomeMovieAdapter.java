@@ -20,13 +20,13 @@ import com.udacity.nanodegree.popularmovies.activity.DetailActivity;
 import com.udacity.nanodegree.popularmovies.activity.HomeActivity;
 import com.udacity.nanodegree.popularmovies.utils.CommonUtils;
 import com.udacity.nanodegree.popularmovies.utils.Logger;
-import com.udacity.nanodegree.popularmovies.ws.entity.MovieResponse;
-import com.udacity.nanodegree.popularmovies.ws.entity.Result;
+import com.udacity.nanodegree.popularmovies.webservice.entity.MoviesResponse;
+import com.udacity.nanodegree.popularmovies.webservice.entity.Result;
 
 import java.util.List;
 
 public class HomeMovieAdapter extends RecyclerView.Adapter<HomeMovieAdapter.ViewHolder> {
-    private MovieResponse movieResponse;
+    private MoviesResponse moviesResponse;
     private Context mContext;
     int width, height;
 
@@ -39,8 +39,8 @@ public class HomeMovieAdapter extends RecyclerView.Adapter<HomeMovieAdapter.View
         }
     }
 
-    public HomeMovieAdapter(MovieResponse response, Context context) {
-        movieResponse = response;
+    public HomeMovieAdapter(MoviesResponse response, Context context) {
+        moviesResponse = response;
         mContext = context;
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -80,7 +80,7 @@ public class HomeMovieAdapter extends RecyclerView.Adapter<HomeMovieAdapter.View
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final List<Result> resultList = movieResponse.getResults();
+        final List<Result> resultList = moviesResponse.getResults();
         final Result result = resultList.get(position);
         String posterPath = CommonUtils.getImageURL(result.getPosterPath());
         Picasso.with(mContext).load(posterPath).into(holder.posterImage);
@@ -107,8 +107,8 @@ public class HomeMovieAdapter extends RecyclerView.Adapter<HomeMovieAdapter.View
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        if (movieResponse != null)
-            return movieResponse.getResults().size();
+        if (moviesResponse != null)
+            return moviesResponse.getResults().size();
         else
             return 0;
     }

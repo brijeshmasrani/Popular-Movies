@@ -1,4 +1,4 @@
-package com.udacity.nanodegree.popularmovies.ws;
+package com.udacity.nanodegree.popularmovies.webservice;
 
 import android.content.Context;
 
@@ -6,10 +6,10 @@ import com.squareup.okhttp.ResponseBody;
 import com.udacity.nanodegree.popularmovies.R;
 import com.udacity.nanodegree.popularmovies.utils.Logger;
 import com.udacity.nanodegree.popularmovies.utils.NetworkUtils;
-import com.udacity.nanodegree.popularmovies.ws.entity.BaseRequest;
-import com.udacity.nanodegree.popularmovies.ws.entity.BaseResponse;
-import com.udacity.nanodegree.popularmovies.ws.entity.MovieResponse;
-import com.udacity.nanodegree.popularmovies.ws.retrofit.RestClient;
+import com.udacity.nanodegree.popularmovies.webservice.entity.BaseRequest;
+import com.udacity.nanodegree.popularmovies.webservice.entity.BaseResponse;
+import com.udacity.nanodegree.popularmovies.webservice.entity.MoviesResponse;
+import com.udacity.nanodegree.popularmovies.webservice.retrofit.RestClient;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -22,15 +22,15 @@ public class AppWs {
 
     public static void getTopRatedMovies(final Context context, final WsListener listener) {
 
-        Call<MovieResponse> call = RestClient.get().getTopRatedMovies(context.getString(R.string.text_API_KEY));
+        Call<MoviesResponse> call = RestClient.get().getTopRatedMovies(context.getString(R.string.text_API_KEY));
 
         try {
 
-            call.enqueue(new Callback<MovieResponse>() {
+            call.enqueue(new Callback<MoviesResponse>() {
 
                 @Override
-                public void onResponse(Response<MovieResponse> response, Retrofit retrofit) {
-                    MovieResponse baseResponse = response.body();
+                public void onResponse(Response<MoviesResponse> response, Retrofit retrofit) {
+                    MoviesResponse baseResponse = response.body();
 
 
                     if (response.isSuccess()) {
@@ -67,15 +67,15 @@ public class AppWs {
 
     public static void getPopularMovies(final Context context, final WsListener listener) {
 
-        Call<MovieResponse> call = RestClient.get().getPopularMovies(context.getString(R.string.text_API_KEY));
+        Call<MoviesResponse> call = RestClient.get().getPopularMovies(context.getString(R.string.text_API_KEY));
 
         try {
 
-            call.enqueue(new Callback<MovieResponse>() {
+            call.enqueue(new Callback<MoviesResponse>() {
 
                 @Override
-                public void onResponse(Response<MovieResponse> response, Retrofit retrofit) {
-                    MovieResponse baseResponse = response.body();
+                public void onResponse(Response<MoviesResponse> response, Retrofit retrofit) {
+                    MoviesResponse baseResponse = response.body();
 
                     if (response.isSuccess()) {
 

@@ -1,4 +1,4 @@
-package com.udacity.nanodegree.popularmovies.ws.entity;
+package com.udacity.nanodegree.popularmovies.webservice.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;

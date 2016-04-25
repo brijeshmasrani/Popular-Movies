@@ -1,6 +1,4 @@
-
-
-package com.udacity.nanodegree.popularmovies.ws.entity;
+package com.udacity.nanodegree.popularmovies.webservice.entity;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -8,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieResponse extends BaseResponse{
+public class MoviesResponse extends BaseResponse{
 
     @SerializedName("page")
     @Expose

@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.udacity.nanodegree.popularmovies.R;
 import com.udacity.nanodegree.popularmovies.utils.CommonUtils;
-import com.udacity.nanodegree.popularmovies.ws.entity.Result;
+import com.udacity.nanodegree.popularmovies.webservice.entity.Result;
 
 public class DetailActivity extends AppCompatActivity {
 
