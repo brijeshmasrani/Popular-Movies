@@ -29,6 +29,8 @@ public class HomeActivity extends AppCompatActivity {
     private Context mContext;
     private RecyclerView recyclerView;
     private ImageView tick_popular, tick_topRated;
+    private MoviesResponse moviesResponse = new MoviesResponse();
+    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,12 @@ public class HomeActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         setTitle("");
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         String sortOrder = AppPreferences.getString(AppPreferences.HOME_SORT_PREFERENCE, SORT_ORDER.POPULAR.name());
 
         if (sortOrder.equalsIgnoreCase(SORT_ORDER.POPULAR.name())) {
@@ -60,6 +68,19 @@ public class HomeActivity extends AppCompatActivity {
         } else if (sortOrder.equalsIgnoreCase(SORT_ORDER.TOP_RATED.name())) {
             showTopRatedMovies();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("moviesResponseObject", moviesResponse);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        moviesResponse = savedInstanceState.getParcelable("moviesResponseObject");
     }
 
     @Override
@@ -94,6 +115,7 @@ public class HomeActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             setTickVisibility(SORT_ORDER.POPULAR.name());
+                            moviesResponse = null;
                             showPopularMovies();
                             alert.dismiss();
                         }
@@ -105,6 +127,7 @@ public class HomeActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             setTickVisibility(SORT_ORDER.TOP_RATED.name());
+                            moviesResponse = null;
                             showTopRatedMovies();
                             alert.dismiss();
                         }
@@ -128,39 +151,49 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     void showPopularMovies() {
-        AppWs.getPopularMovies(mContext, new AppWs.WsListener() {
-            @Override
-            public void onResponseSuccess(BaseResponse baseResponse) {
-                if (baseResponse instanceof MoviesResponse) {
-                    MoviesResponse moviesResponse = (MoviesResponse) baseResponse;
-                    setupAdapter(moviesResponse);
-                    AppPreferences.putString(AppPreferences.HOME_SORT_PREFERENCE, SORT_ORDER.POPULAR.name());
+        if (moviesResponse != null && moviesResponse.getTotalResults() != null) {
+            setupAdapter(moviesResponse);
+            AppPreferences.putString(AppPreferences.HOME_SORT_PREFERENCE, SORT_ORDER.POPULAR.name());
+        } else {
+            AppWs.getPopularMovies(mContext, new AppWs.WsListener() {
+                @Override
+                public void onResponseSuccess(BaseResponse baseResponse) {
+                    if (baseResponse instanceof MoviesResponse) {
+                        moviesResponse = (MoviesResponse) baseResponse;
+                        setupAdapter(moviesResponse);
+                        AppPreferences.putString(AppPreferences.HOME_SORT_PREFERENCE, SORT_ORDER.POPULAR.name());
+                    }
                 }
-            }
 
-            @Override
-            public void notifyResponseFailed(String message, BaseRequest request) {
-                Notify.toast(getString(R.string.text_tryagain), mContext);
-            }
-        });
+                @Override
+                public void notifyResponseFailed(String message, BaseRequest request) {
+                    Notify.toast(getString(R.string.text_tryagain), mContext);
+                }
+            });
+        }
     }
 
     void showTopRatedMovies() {
-        AppWs.getTopRatedMovies(mContext, new AppWs.WsListener() {
-            @Override
-            public void onResponseSuccess(BaseResponse baseResponse) {
-                if (baseResponse instanceof MoviesResponse) {
-                    MoviesResponse moviesResponse = (MoviesResponse) baseResponse;
-                    setupAdapter(moviesResponse);
-                    AppPreferences.putString(AppPreferences.HOME_SORT_PREFERENCE, SORT_ORDER.TOP_RATED.name());
+        if (moviesResponse != null && moviesResponse.getTotalResults() > 0) {
+            setupAdapter(moviesResponse);
+            AppPreferences.putString(AppPreferences.HOME_SORT_PREFERENCE, SORT_ORDER.TOP_RATED.name());
+        } else {
+            AppWs.getTopRatedMovies(mContext, new AppWs.WsListener() {
+                @Override
+                public void onResponseSuccess(BaseResponse baseResponse) {
+                    if (baseResponse instanceof MoviesResponse) {
+                        moviesResponse = (MoviesResponse) baseResponse;
+                        setupAdapter(moviesResponse);
+                        AppPreferences.putString(AppPreferences.HOME_SORT_PREFERENCE, SORT_ORDER.TOP_RATED.name());
+                    }
                 }
-            }
 
-            @Override
-            public void notifyResponseFailed(String message, BaseRequest request) {
-                Notify.toast(getString(R.string.text_tryagain), mContext);
-            }
-        });
+                @Override
+                public void notifyResponseFailed(String message, BaseRequest request) {
+                    Notify.toast(getString(R.string.text_tryagain), mContext);
+                }
+            });
+        }
     }
 
     void setupAdapter(MoviesResponse moviesResponse) {
