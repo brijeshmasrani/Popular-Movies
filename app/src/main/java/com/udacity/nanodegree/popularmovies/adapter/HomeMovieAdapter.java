@@ -1,8 +1,6 @@
 package com.udacity.nanodegree.popularmovies.adapter;
 
-import android.app.ActivityOptions;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -16,8 +14,7 @@ import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.nanodegree.popularmovies.R;
-import com.udacity.nanodegree.popularmovies.activity.DetailActivity;
-import com.udacity.nanodegree.popularmovies.activity.HomeActivity;
+import com.udacity.nanodegree.popularmovies.activity.MainActivity;
 import com.udacity.nanodegree.popularmovies.utils.CommonUtils;
 import com.udacity.nanodegree.popularmovies.utils.Logger;
 import com.udacity.nanodegree.popularmovies.webservice.entity.MoviesResponse;
@@ -83,23 +80,13 @@ public class HomeMovieAdapter extends RecyclerView.Adapter<HomeMovieAdapter.View
         final List<Result> resultList = moviesResponse.getResults();
         final Result result = resultList.get(position);
         String posterPath = CommonUtils.getImageURL(result.getPosterPath());
-        Picasso.with(mContext).load(posterPath).into(holder.posterImage);
+        Picasso.with(mContext).load(posterPath).error(R.drawable.ic_poster_placeholder)
+                .placeholder(R.drawable.ic_poster_placeholder).into(holder.posterImage);
 
         holder.posterImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.putExtra("data", result);
-
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((HomeActivity) mContext,
-                            holder.posterImage, mContext.getString(R.string.transition_string));
-                    if (options != null) {
-                        mContext.startActivity(intent, options.toBundle());
-                        return;
-                    }
-                }
-                mContext.startActivity(intent);
+                ((MainActivity) mContext).showDetailFragment(result, holder.posterImage);
             }
         });
     }

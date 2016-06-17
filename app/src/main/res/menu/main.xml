@@ -6,5 +6,6 @@
         android:id="@+id/menu_sort"
         android:icon="@drawable/ic_sort"
         android:orderInCategory="1"
-        movies:showAsAction="always|withText" />
+        movies:showAsAction="ifRoom"
+        android:title="@string/sort" />
 </menu>
