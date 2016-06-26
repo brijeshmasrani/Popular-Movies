@@ -1,11 +1,11 @@
 package com.udacity.nanodegree.popularmovies.activity;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.TransitionInflater;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     private static final String TAG = "MainActivity";
     FragmentManager fragmentManager;
     Context mContext;
+    HomeFragment homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,15 +28,14 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         mContext = MainActivity.this;
 
         if (savedInstanceState == null) {
-            HomeFragment homeFragment = new HomeFragment();
+            homeFragment = HomeFragment.newInstance();
             fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .add(R.id.fragment, homeFragment)
-                    .addToBackStack(null)
+                    .addToBackStack("")
                     .commit();
         }
 
-//        setupAnimation();
         getSupportFragmentManager().addOnBackStackChangedListener(this);
     }
 
@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
     @Override
     public void onBackPressed() {
+        if (fragmentManager == null)
+            fragmentManager = getSupportFragmentManager();
+
         if (fragmentManager.getBackStackEntryCount() != 0) {
             fragmentManager.popBackStack();
         } else {
@@ -66,44 +69,25 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     }
 
     public void showDetailFragment(Result result, View posterImage) {
-        if (fragmentManager == null)
+        DetailFragment detailFragment = DetailFragment.getInstance(result);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Slide slideTransition = new Slide(Gravity.END);
+            slideTransition.setDuration(300);
+
+            detailFragment.setEnterTransition(slideTransition);
+            detailFragment.setAllowEnterTransitionOverlap(true);
+            detailFragment.setAllowReturnTransitionOverlap(true);
+        }
+
+        if (fragmentManager == null) {
             fragmentManager = getSupportFragmentManager();
-
-        DetailFragment detailFragment = DetailFragment.getInstance();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("data", result);
-        detailFragment.setArguments(bundle);
-
+        }
         fragmentManager.beginTransaction()
                 .add(R.id.fragment, detailFragment)
-//                .addSharedElement(posterImage, mContext.getString(R.string.transition_string))
-                .addToBackStack(null)
+                .addToBackStack("")
+                .addSharedElement(posterImage, getString(R.string.transition_string))
                 .commit();
-        /*if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-        }*/
-    }
-
-    private void setupAnimation() {
-        DetailFragment detailFragment = DetailFragment.getInstance();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            detailFragment.setSharedElementReturnTransition(TransitionInflater.from(
-                    mContext).inflateTransition(R.transition.poster_transition));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                detailFragment.setExitTransition(TransitionInflater.from(
-                        mContext).inflateTransition(android.R.transition.fade));
-            }
-
-            detailFragment.setSharedElementEnterTransition(TransitionInflater.from(
-                    mContext).inflateTransition(R.transition.poster_transition));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                detailFragment.setEnterTransition(TransitionInflater.from(
-                        mContext).inflateTransition(android.R.transition.fade));
-            }
-        }
     }
 
     @Override
@@ -111,12 +95,8 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
         if (backStackEntryCount > 1 && getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
         } else if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            getSupportActionBar().setDisplayShowHomeEnabled(false);
-            getSupportActionBar().setHomeButtonEnabled(false);
         }
     }
 }

@@ -27,13 +27,18 @@ import com.udacity.nanodegree.popularmovies.webservice.entity.Result;
 public class DetailFragment extends Fragment {
     TextView txt_name, txt_year, txt_rating, txt_description;
     ImageView posterImage;
+    Toolbar toolbar;
 
-    static DetailFragment instance;
-    public DetailFragment(){}
-    public static DetailFragment getInstance() {
-        if (instance == null)
-            instance = new DetailFragment();
-        return instance;
+    public DetailFragment() {
+    }
+
+    public static DetailFragment getInstance(Result result) {
+        Bundle args = new Bundle();
+        args.putParcelable("data", result);
+
+        DetailFragment detailFragment = new DetailFragment();
+        detailFragment.setArguments(args);
+        return detailFragment;
     }
 
     @Override
@@ -64,10 +69,11 @@ public class DetailFragment extends Fragment {
         txt_year = (TextView) getView().findViewById(R.id.detail_year);
         txt_rating = (TextView) getView().findViewById(R.id.detail_rating);
         txt_description = (TextView) getView().findViewById(R.id.detail_description);
-        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbarDetail);
+        toolbar = (Toolbar) getView().findViewById(R.id.toolbarDetail);
         posterImage = (ImageView) getView().findViewById(R.id.imgPosterDetail);
 
         ((MainActivity) mContext).setSupportActionBar(toolbar);
+        toolbar.setTitle("");
     }
 
     @Override

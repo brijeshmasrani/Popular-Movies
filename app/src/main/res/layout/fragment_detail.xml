@@ -10,31 +10,6 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/color_banner">
-
-            <ImageView
-                android:id="@+id/imgBackPress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:visibility="gone"
-                android:src="@drawable/ic_arrow_back" />
-
-            <ImageView
-                android:id="@+id/imgFav"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:padding="@dimen/small"
-                android:visibility="gone"
-                android:src="@drawable/ic_fav_border"
-                android:tag="@string/tag_notselected" />
-        </RelativeLayout>
-
     </android.support.v7.widget.Toolbar>
 
 
@@ -54,7 +29,7 @@
                 android:id="@+id/layout_poster"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/toolbar"
+                android:layout_below="@id/toolbarDetail"
                 android:background="@color/color_banner"
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
