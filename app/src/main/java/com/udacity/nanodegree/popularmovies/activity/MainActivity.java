@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
             fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .add(R.id.fragment, homeFragment)
-                    .addToBackStack("")
                     .commit();
         }
 
@@ -42,17 +41,15 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     @Override
     protected void onResume() {
         super.onResume();
+        showHomeButton();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (fragmentManager == null)
-            fragmentManager = getSupportFragmentManager();
-
-        if (fragmentManager.getBackStackEntryCount() != 0) {
-            fragmentManager.popBackStack();
-        } else {
-            super.onBackPressed();
+    private void showHomeButton(){
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+        if (backStackEntryCount > 0 && getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
     }
 
@@ -92,11 +89,6 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
     @Override
     public void onBackStackChanged() {
-        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-        if (backStackEntryCount > 1 && getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        } else if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
+        showHomeButton();
     }
 }

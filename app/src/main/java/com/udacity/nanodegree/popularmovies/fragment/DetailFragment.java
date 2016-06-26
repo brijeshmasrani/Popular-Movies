@@ -62,6 +62,12 @@ public class DetailFragment extends Fragment {
         getData();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        toolbar.setTitle("");
+    }
+
     private void setUpView() {
         Context mContext = getActivity();
 
