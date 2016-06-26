@@ -31,9 +31,6 @@ import com.udacity.nanodegree.popularmovies.webservice.entity.BaseRequest;
 import com.udacity.nanodegree.popularmovies.webservice.entity.BaseResponse;
 import com.udacity.nanodegree.popularmovies.webservice.entity.MoviesResponse;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class HomeFragment extends Fragment {
     private Context mContext;
     private RecyclerView recyclerView;
@@ -41,8 +38,14 @@ public class HomeFragment extends Fragment {
     private MoviesResponse moviesResponse = new MoviesResponse();
 
     public HomeFragment() {
-        // Required empty public constructor
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,17 +55,18 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
             moviesResponse = savedInstanceState.getParcelable("moviesResponseObject");
         }
+        mContext = getActivity();
+
+        setupView();
+    }
+
+    private void setupView() {
+        //noinspection ConstantConditions
         recyclerView = (RecyclerView) getView().findViewById(R.id.movieList);
         float dimension = getResources().getInteger(R.integer.column_count);
         GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), (int) dimension,
@@ -71,12 +75,8 @@ public class HomeFragment extends Fragment {
         mLayoutManager.setAutoMeasureEnabled(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mContext = getActivity();
-
         Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
-
         ((MainActivity) mContext).setSupportActionBar(toolbar);
-        ((MainActivity) mContext).setTitle(getString(R.string.app_name));
         toolbar.setTitleTextColor(Color.WHITE);
     }
 
@@ -155,7 +155,6 @@ public class HomeFragment extends Fragment {
     }
 
     void setTickVisibility(String sortOrder) {
-
         if (sortOrder.equalsIgnoreCase(AppConstants.SORT_ORDER.POPULAR.name())) {
             tick_popular.setVisibility(View.VISIBLE);
             tick_topRated.setVisibility(View.INVISIBLE);

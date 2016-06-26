@@ -22,5 +22,6 @@
     <string name="top_rated">Top Rated</string>
     <string name="text_searching_popular">Searching Popular Movies !!</string>
     <string name="text_searching_toprated">Searching Top Rated Movies !!</string>
+    <string name="favorite">Favorite</string>
 
 </resources>
