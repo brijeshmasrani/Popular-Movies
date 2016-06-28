@@ -18,7 +18,7 @@ import com.udacity.nanodegree.popularmovies.activity.MainActivity;
 import com.udacity.nanodegree.popularmovies.utils.CommonUtils;
 import com.udacity.nanodegree.popularmovies.utils.Logger;
 import com.udacity.nanodegree.popularmovies.webservice.entity.MoviesResponse;
-import com.udacity.nanodegree.popularmovies.webservice.entity.Result;
+import com.udacity.nanodegree.popularmovies.models.Result;
 
 import java.util.List;
 

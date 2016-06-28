@@ -21,20 +21,27 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.udacity.nanodegree.popularmovies.R;
 import com.udacity.nanodegree.popularmovies.activity.MainActivity;
+import com.udacity.nanodegree.popularmovies.models.Result;
+import com.udacity.nanodegree.popularmovies.realm.Favorites;
 import com.udacity.nanodegree.popularmovies.utils.CommonUtils;
-import com.udacity.nanodegree.popularmovies.webservice.entity.Result;
+
+import io.realm.Realm;
 
 public class DetailFragment extends Fragment {
+    private static final String TAG = "Detail";
     TextView txt_name, txt_year, txt_rating, txt_description;
     ImageView posterImage;
     Toolbar toolbar;
+    Realm realm;
+    Result result;
 
     public DetailFragment() {
     }
 
-    public static DetailFragment getInstance(Result result) {
+    public static DetailFragment getInstance(Result result, boolean isFavorite) {
         Bundle args = new Bundle();
         args.putParcelable("data", result);
+        args.putBoolean("isFavorite", isFavorite);
 
         DetailFragment detailFragment = new DetailFragment();
         detailFragment.setArguments(args);
@@ -87,19 +94,39 @@ public class DetailFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.detail_menu, menu);
+        boolean isFavorite = getArguments().getBoolean("isFavorite");
+        if (isFavorite){
+            menu.findItem(R.id.menu_fav).setChecked(true).setIcon(R.drawable.ic_fav_filled);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_fav:
+                final boolean isFav;
+
                 if (item.isChecked()) {
                     item.setIcon(R.drawable.ic_fav_border);
                     item.setChecked(false);
+                    isFav = false;
                 } else {
                     item.setIcon(R.drawable.ic_fav_filled);
                     item.setChecked(true);
+                    isFav = true;
                 }
+
+                realm.executeTransactionAsync(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Favorites favorites = new Favorites();
+                        favorites.setFav(isFav);
+                        favorites.setId(result.getId());
+
+                        realm.copyToRealmOrUpdate(favorites);
+                    }
+                });
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -107,10 +134,11 @@ public class DetailFragment extends Fragment {
     }
 
     private void getData() {
-        Result data = getArguments().getParcelable("data");
-        if (data != null) {
+        result = getArguments().getParcelable("data");
 
-            String posterPath = CommonUtils.getImageURL(data.getPosterPath());
+        if (result != null) {
+
+            String posterPath = CommonUtils.getImageURL(result.getPosterPath());
             Picasso.with(getActivity()).load(posterPath).error(R.drawable.ic_poster_placeholder)
                     .placeholder(R.drawable.ic_poster_placeholder).into(posterImage);
 
@@ -134,16 +162,25 @@ public class DetailFragment extends Fragment {
 
             posterImage.setLayoutParams(layoutParams);
 
-            txt_name.setText(data.getOriginalTitle());
-            txt_description.setText(data.getOverview());
+            txt_name.setText(result.getOriginalTitle());
+            txt_description.setText(result.getOverview());
 
-            String ratingText = String.valueOf(data.getVoteAverage()) + getString(R.string.rating_outof10);
+            String ratingText = String.valueOf(result.getVoteAverage()) + getString(R.string.rating_outof10);
             txt_rating.setText(ratingText);
 
-            String releaseDate = data.getReleaseDate();
+            String releaseDate = result.getReleaseDate();
             String[] releaseDateTemp = releaseDate.split("-");
             String releaseYear = releaseDateTemp[0];
             txt_year.setText(releaseYear);
         }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if(realm != null && !realm.isClosed())
+            realm.close();
     }
 }

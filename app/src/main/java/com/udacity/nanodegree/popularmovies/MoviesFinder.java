@@ -2,9 +2,9 @@ package com.udacity.nanodegree.popularmovies;
 
 import android.app.Application;
 
-/**
- * Created by brijesh on 4/17/16.
- */
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 public class MoviesFinder extends Application {
     static MoviesFinder _instance;
 
@@ -12,6 +12,12 @@ public class MoviesFinder extends Application {
     public void onCreate() {
         super.onCreate();
         _instance = this;
+
+        // Create a RealmConfiguration that saves the Realm file in the app's "files" directory.
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(_instance)
+                .name("movies")
+                .build();
+        Realm.setDefaultConfiguration(realmConfig);
     }
 
     public static MoviesFinder getInstance() {

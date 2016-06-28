@@ -12,7 +12,11 @@ import android.view.View;
 import com.udacity.nanodegree.popularmovies.R;
 import com.udacity.nanodegree.popularmovies.fragment.DetailFragment;
 import com.udacity.nanodegree.popularmovies.fragment.HomeFragment;
-import com.udacity.nanodegree.popularmovies.webservice.entity.Result;
+import com.udacity.nanodegree.popularmovies.models.Result;
+import com.udacity.nanodegree.popularmovies.realm.Favorites;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
     private static final String TAG = "MainActivity";
@@ -66,7 +70,14 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     }
 
     public void showDetailFragment(Result result, View posterImage) {
-        DetailFragment detailFragment = DetailFragment.getInstance(result);
+        Boolean isFavorite = false;
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Favorites> all = realm.where(Favorites.class).equalTo("isFav", true).equalTo("id", result.getId()).findAll();
+        if (all.size() == 1){
+            isFavorite = true;
+        }
+
+        DetailFragment detailFragment = DetailFragment.getInstance(result, isFavorite);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Slide slideTransition = new Slide(Gravity.END);
